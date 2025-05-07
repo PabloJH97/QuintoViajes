@@ -1,0 +1,217 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/develop/Dockerfile
+    container_name: quintoviajes-php
+    image: quintoviajes-back
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - .:/var/www/html
+      - ./docker/develop/php/develop.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "9001:9000"
+    networks:
+      - quintoviajes-back
+  vite:
+    container_name: quintoviajes-vite
+    image: quintoviajes-back
+    user: laravel
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "5173:5173"
+    command: npm run dev
+    working_dir: /var/www/html
+    networks:
+      - quintoviajes-back
+  nginx:
+    image: nginx:latest
+    container_name: quintoviajes-nginx
+    restart: unless-stopped
+    expose:
+      - 80
+    environment:
+      VIRTUAL_HOST: "quintoviajes.test"
+    volumes:
+      - .:/var/www/html
+      - ./docker/develop/nginx/develop.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - redis
+    networks:
+      - nginx-proxy
+      - quintoviajes-back
+  pgsql:
+    image: 'postgres:17'
+    container_name: quintoviajes-pgsql
+    ports:
+      - '${FORWARD_DB_PORT:-5432}:5432'
+    environment:
+      PGPASSWORD: '${DB_PASSWORD:-secret}'
+      POSTGRES_DB: '${DB_DATABASE}'
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+    volumes:
+      - './docker/develop/pgsql/data:/var/lib/postgresql/data'
+      - './docker/develop/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+    networks:
+      - quintoviajes-back
+    healthcheck:
+      test:
+        - CMD
+        - pg_isready
+        - '-q'
+        - '-d'
+        - '${DB_DATABASE}'
+        - '-U'
+        - '${DB_USERNAME}'
+      retries: 3
+      timeout: 5s
+  redis:
+    image: redis:latest
+    container_name: quintoviajes-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - quintoviajes-back
+  mailpit:
+    image: axllent/mailpit
+    container_name: quintoviajes-mailpit
+    volumes:
+      - ./docker/develop/mailpit/data:/data
+    ports:
+      - 8025:8025
+      - 1025:1025
+    networks:
+      - quintoviajes-back
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+  cron:
+    container_name: quintoviajes-cron
+    image: quintoviajes-back
+    volumes:
+      - .:/var/www/html
+      - ./docker/develop/cron/laravel:/var/spool/cron/crontabs/laravel
+    command: [ "crond", "-f" ]
+    restart: always
+    user: root
+    depends_on:
+      - php
+      - redis
+    networks:
+      - quintoviajes-back
+  horizon:
+    container_name: quintoviajes-horizon
+    image: quintoviajes-back
+    volumes:
+      - .:/var/www/html
+    command: [ "php", "artisan", "horizon" ]
+    user: laravel
+    depends_on:
+      - php
+      - redis
+    networks:
+      - quintoviajes-back
+  pulse:
+    container_name: quintoviajes-pulse
+    image: quintoviajes-back
+    volumes:
+      - .:/var/www/html
+    command: [ "php", "artisan", "pulse:check" ]
+    user: laravel
+    depends_on:
+      - php
+      - redis
+    networks:
+      - quintoviajes-back
+  reverb:
+    container_name: quintoviajes-reverb
+    image: quintoviajes-back
+    volumes:
+      - .:/var/www/html
+    command: ["php", "artisan", "reverb:start", "--debug"]
+    user: laravel
+    expose:
+      - "8080"
+    environment:
+        VIRTUAL_HOST: reverb.quintoviajes.test
+        VIRTUAL_PORT: 8080
+    depends_on:
+      - php
+      - redis
+    networks:
+      - nginx-proxy
+      - quintoviajes-back
+  typesense:
+    image: 'typesense/typesense:0.25.2'
+    container_name: quintoviajes-typesense
+    ports:
+      - '${FORWARD_TYPESENSE_PORT:-8108}:8108'
+    environment:
+      TYPESENSE_DATA_DIR: '${TYPESENSE_DATA_DIR:-/typesense-data}'
+      TYPESENSE_API_KEY: '${TYPESENSE_API_KEY:-xyz}'
+      TYPESENSE_ENABLE_CORS: '${TYPESENSE_ENABLE_CORS:-true}'
+    volumes:
+      - 'sail-typesense:/typesense-data'
+    networks:
+      - nginx-proxy
+      - quintoviajes-back
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - '--no-verbose'
+        - '--spider'
+        - 'http://quintoviajes.test:8108/health'
+      retries: 5
+      timeout: 7s
+  selenium:
+    image: 'seleniarm/standalone-chromium'
+    container_name: quintoviajes-selenium
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+      - 'quintoviajes.test:host-gateway'
+    volumes:
+      - '/dev/shm:/dev/shm'
+    networks:
+      - nginx-proxy
+      - quintoviajes-back
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: quintoviajes-pgadmin
+    restart: unless-stopped
+    expose:
+      - 80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      VIRTUAL_HOST: pgadmin.quintoviajes.test
+      VIRTUAL_PORT: 80
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    volumes:
+      - './docker/develop/pgadmin:/var/lib/pgadmin'
+      - ./docker/develop/pgadmin/servers/servers.json:/pgadmin4/servers.json
+    depends_on:
+      - pgsql
+    networks:
+      - nginx-proxy
+      - quintoviajes-back
+
+networks:
+  nginx-proxy:
+    external: true
+  quintoviajes-back:
+    name: quintoviajes-back
+
+volumes:
+  sail-typesense:
+    driver: local
+  pgadmin-data:
+    driver: local
