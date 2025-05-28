@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('zones', function (Blueprint $table) {
+        Schema::create('tickets', function (Blueprint $table) {
             $table->uuid('id')->unique();
-            $table->foreignUuid('genre_id')->constrained(table:'genres', indexName:'zone_id_genre')->cascadeOnDelete();
-            $table->foreignUuid('floor_id')->constrained(table:'floors', indexName:'zone_id_floor')->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained(table:'users', indexName:'ticket_id_user')->cascadeOnDelete();
+            $table->foreignUuid('flight_id')->constrained(table:'flights', indexName:'ticket_id_flight')->cascadeOnDelete();
             $table->timestamps();
             $table->primary(['genre_id', 'floor_id']);
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('zones');
+        Schema::dropIfExists('tickets');
     }
 };
