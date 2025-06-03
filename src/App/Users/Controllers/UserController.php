@@ -11,6 +11,7 @@ use Domain\Users\Actions\UserUpdateAction;
 use Domain\Users\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -20,6 +21,7 @@ class UserController extends Controller
 {
     public function index()
     {
+        Gate::authorize('users.view');
         return Inertia::render('users/Index');
     }
 

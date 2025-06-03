@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('planes', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
-            $table->string('name')->unique();
+            $table->string('code')->unique();
             $table->integer('capacity');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reservations', function (Blueprint $table) {
+        Schema::create('flight_ticket', function (Blueprint $table) {
             $table->uuid('id')->unique()->primary();
-            $table->foreignUuid('book_id')->constrained(table:'books', indexName:'reservation_id_book')->cascadeOnDelete();
-            $table->foreignUuid('user_id')->constrained(table:'users', indexName:'reservation_id_user')->cascadeOnDelete();
-            $table->boolean('active')->default(true);
+            $table->foreignUuid('flight_id')->constrained(table:'flights', indexName:'flight_id_flight_ticket');
+            $table->foreignUuid('ticket_id')->constrained(table:'tickets', indexName: 'ticket_id_flight_ticket');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reservations');
+        Schema::dropIfExists('flight_ticket');
     }
 };

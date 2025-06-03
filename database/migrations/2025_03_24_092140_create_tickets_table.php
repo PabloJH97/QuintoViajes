@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tickets', function (Blueprint $table) {
-            $table->uuid('id')->unique();
+            $table->uuid('id')->unique()->primary();
             $table->foreignUuid('user_id')->constrained(table:'users', indexName:'ticket_id_user')->cascadeOnDelete();
             $table->foreignUuid('flight_id')->constrained(table:'flights', indexName:'ticket_id_flight')->cascadeOnDelete();
             $table->timestamps();
-            $table->primary(['genre_id', 'floor_id']);
+            $table->softDeletes();
         });
     }
 

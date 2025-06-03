@@ -8,6 +8,7 @@ use Database\Factories\UserFactory;
 use Domain\Books\Models\Book;
 use Domain\Loans\Models\Loan;
 use Domain\Reservations\Models\Reservation;
+use Domain\Tickets\Models\Ticket;
 use Domain\Users\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -79,23 +80,9 @@ class User extends Authenticatable
         return $this->hasOne(UserSetting::class, 'user_id');
     }
 
-    public function books(): BelongsToMany
+    public function tickets(): HasMany
     {
-        return $this->belongsToMany(Book::class, 'book_user', 'user_id', 'book_id')->withTrashed();
+        return $this->hasMany(Ticket::class);
     }
 
-    public function loans(): HasMany
-    {
-        return $this->hasMany(Loan::class)->with('book')->withTrashed();
-    }
-
-    public function activeLoans(): HasMany
-    {
-        return $this->hasMany(Loan::class)->where('borrowed', true)->with('book');
-    }
-
-    public function reservations(): HasMany
-    {
-        return $this->hasMany(Reservation::class)->with('book')->withTrashed();
-    }
 }

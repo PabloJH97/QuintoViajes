@@ -20,7 +20,8 @@ return new class extends Migration
             $table->float('price');
             $table->string('seats');
             $table->date('date');
-            $table->string('state');
+            $table->string('state')->default('draft');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
