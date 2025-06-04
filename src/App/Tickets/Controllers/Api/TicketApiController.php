@@ -28,7 +28,8 @@ class TicketApiController extends Controller
     public function store(Request $request, TicketStoreAction $action)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            'user_id' => ['required', 'numeric', 'max:255'],
+            'flight_id' => ['required', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -46,7 +47,8 @@ class TicketApiController extends Controller
     public function update(Request $request, Ticket $ticket, TicketUpdateAction $action)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            'user_id' => ['required', 'numeric', 'max:255'],
+            'flight_id' => ['required', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {

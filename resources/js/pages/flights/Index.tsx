@@ -110,14 +110,29 @@ export default function FlightsIndex() {
     }),
     createTextColumn<Flight>({
       id: "seats",
-      header: t("ui.flights.columns.seats") || "Seats",
+      header: t("ui.flights.columns.seats.name") || "Seats",
+      format: (value) => {
+            let returnedValue=t(`ui.flights.columns.seats.${value}`);
+            let aux;
+            let res: string[] = [];
+            if (value.includes(',')) {
+                aux = value.split(', ');
+                aux.map((seat) => {
+                    seat = t(`ui.flights.columns.seats.${seat}`);
+                    res=[...res, seat];
+                });
+                aux = res.join(', ');
+                returnedValue=aux;
+            }
+            return returnedValue;
+        },
       accessorKey: "seats",
     }),
     createTextColumn<Flight>({
       id: "state",
-      header: t("ui.flights.columns.state") || "State",
+      header: t("ui.flights.columns.state.name") || "State",
       format: (value)=>{
-            return t(`ui.loans.columns.state.${value}`)
+            return t(`ui.flights.columns.state.${value}`)
         },
       accessorKey: "state",
     }),
@@ -125,11 +140,6 @@ export default function FlightsIndex() {
       id: "date",
       header: t("ui.flights.columns.date") || "Date",
       accessorKey: "date",
-    }),
-    createTextColumn<Flight>({
-      id: "state",
-      header: t("ui.flights.columns.state") || "State",
-      accessorKey: "state",
     }),
     createDateColumn<Flight>({
       id: "created_at",
@@ -213,10 +223,10 @@ export default function FlightsIndex() {
                                   },
                                   {
                                       id: 'seats',
-                                      label: t('ui.flights.filters.seats') || 'Seats',
+                                      label: t('ui.flights.filters.seats.name') || 'Seats',
                                       type: 'select',
-                                      options: [{value:'1st', label:t('ui.flights.filters.1st')}, {value:'2nd', label: t('ui.flights.filters.2nd')}, {value:'tourist', label: t('ui.flights.filters.tousit')}],
-                                      placeholder: t('ui.flights.placeholders.seats') || 'Seats...',
+                                      options: [{value:'1st', label:t('ui.flights.filters.seats.1st')}, {value:'2nd', label: t('ui.flights.filters.seats.2nd')}, {value:'tourist', label: t('ui.flights.filters.seats.tousit')}],
+                                      placeholder: t('ui.flights.placeholders.seats.name') || 'Seats...',
                                   },
                                   {
                                       id: 'date',
@@ -226,10 +236,10 @@ export default function FlightsIndex() {
                                   },
                                   {
                                       id: 'state',
-                                      label: t('ui.flights.filters.state') || 'State',
+                                      label: t('ui.flights.filters.state.name') || 'State',
                                       type: 'select',
-                                      options: [{value:'draft', label:t('ui.flights.filters.draft')}, {value:'waiting', label: t('ui.flights.filters.waiting')}, {value:'full', label: t('ui.flights.filters.full')}, {value:'on the way', label: t('ui.flights.filters.on_the_way')}],
-                                      placeholder: t('ui.flights.placeholders.state') || 'State...',
+                                      options: [{value:'draft', label:t('ui.flights.filters.state.draft')}, {value:'waiting', label: t('ui.flights.filters.state.waiting')}, {value:'full', label: t('ui.flights.filters.state.full')}, {value:'travelling', label: t('ui.flights.filters.state.travelling')}],
+                                      placeholder: t('ui.flights.placeholders.state.name') || 'State...',
                                   },
                                   {
                                       id: 'created_at',

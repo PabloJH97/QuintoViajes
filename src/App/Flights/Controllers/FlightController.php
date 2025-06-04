@@ -9,6 +9,7 @@ use Domain\Flights\Actions\FlightStoreAction;
 use Domain\Flights\Actions\FlightUpdateAction;
 use Domain\Flights\Models\Flight;
 use Domain\Floors\Models\Floor;
+use Domain\Planes\Models\Plane;
 use Domain\Zones\Models\Zone;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -28,9 +29,8 @@ class FlightController extends Controller
      */
     public function create()
     {
-        $zones=Zone::with('genre')->get();
-        $floors=Floor::all();
-        return Inertia::render('bookshelves/Create', ['arrayZones' => $zones, 'arrayFloors' => $floors]);
+        $planes=Plane::all();
+        return Inertia::render('flights/Create', ['arrayPlanes' => $planes]);
     }
 
     /**
@@ -39,9 +39,13 @@ class FlightController extends Controller
     public function store(Request $request, FlightStoreAction $action)
     {
         $validator = Validator::make($request->all(), [
-            'number' => ['required', 'numeric', 'max:255'],
-            'capacity' => ['required', 'numeric', 'max:255'],
-            'zone_id' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'min:4', 'max:4'],
+            'planeCode' => ['required', 'string', 'min:4', 'max:4'],
+            'origin' => ['required', 'string', 'max:255'],
+            'destination' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'max:255'],
+            'seats' => ['required'],
+            'date' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -50,8 +54,8 @@ class FlightController extends Controller
 
         $action($validator->validated());
 
-        return redirect()->route('bookshelves.index')
-            ->with('success', __('messages.bookshelves.created'));
+        return redirect()->route('flights.index')
+            ->with('success', __('messages.flights.created'));
     }
 
     /**
@@ -67,16 +71,11 @@ class FlightController extends Controller
      */
     public function edit(Request $request, Flight $flight)
     {
-        $zones=Zone::with('genre')->get();
-        $floors=Floor::all();
-        $selectedFloor=Floor::where('id', Zone::where('id', $flight->zone_id)->first()->floor_id)->first()->id;
-        return Inertia::render('bookshelves/Edit', [
+        return Inertia::render('flights/Edit', [
             'flight' => $flight,
             'page' => $request->query('page'),
             'perPage' => $request->query('perPage'),
-            'arrayZones' => $zones,
-            'arrayFloors' => $floors,
-            'selectedFloor' => $selectedFloor
+            'planeCode' => $flight->plane->code,
         ]);
     }
 
@@ -86,9 +85,13 @@ class FlightController extends Controller
     public function update(Request $request, Flight $flight, FlightUpdateAction $action)
     {
         $validator = Validator::make($request->all(), [
-            'number' => ['required', 'numeric'],
-            'capacity' => ['required', 'numeric'],
-            'zone_id' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'min:4', 'max:4'],
+            'planeCode' => ['required', 'string', 'min:4', 'max:4'],
+            'origin' => ['required', 'string', 'max:255'],
+            'destination' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'max:255'],
+            'seats' => ['required'],
+            'date' => ['required'],
 
         ]);
 
@@ -98,7 +101,7 @@ class FlightController extends Controller
 
         $action($flight, $validator->validated());
 
-        $redirectUrl = route('bookshelves.index');
+        $redirectUrl = route('flights.index');
 
         // Añadir parámetros de página a la redirección si existen
         if ($request->has('page')) {
@@ -109,7 +112,7 @@ class FlightController extends Controller
         }
 
         return redirect($redirectUrl)
-            ->with('success', __('messages.bookshelves.updated'));
+            ->with('success', __('messages.flights.updated'));
     }
 
     /**
@@ -119,7 +122,7 @@ class FlightController extends Controller
     {
         $action($flight);
 
-        return redirect()->route('bookshelves.index')
-            ->with('success', __('messages.bookshelves.deleted'));
+        return redirect()->route('flights.index')
+            ->with('success', __('messages.flights.deleted'));
     }
 }

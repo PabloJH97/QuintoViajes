@@ -34,7 +34,7 @@ class FlightFactory extends Factory
             'price' => fake()->randomFloat($nmMaxDecimals=2, $min=0, $max=300),
             'seats' => implode(', ', $seats),
             'date' => fake()->dateTimeBetween($startDate='now', $endDate='+1 year'),
-            'state' => fake()->randomElement($array=['draft', 'waiting', 'full', 'on the way']),
+            'state' => fake()->randomElement($array=['draft', 'waiting', 'full', 'travelling']),
 
         ];
     }

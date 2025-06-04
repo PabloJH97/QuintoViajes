@@ -28,9 +28,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        $zones=Zone::with('genre')->get();
-        $floors=Floor::all();
-        return Inertia::render('bookshelves/Create', ['arrayZones' => $zones, 'arrayFloors' => $floors]);
+        return Inertia::render('tickets/Create', []);
     }
 
     /**
@@ -39,9 +37,8 @@ class TicketController extends Controller
     public function store(Request $request, TicketStoreAction $action)
     {
         $validator = Validator::make($request->all(), [
-            'number' => ['required', 'numeric', 'max:255'],
-            'capacity' => ['required', 'numeric', 'max:255'],
-            'zone_id' => ['required', 'string', 'max:255'],
+            'user' => ['required', 'string', 'max:255'],
+            'flight' => ['required', 'string', 'min:4', 'max:4'],
         ]);
 
         if ($validator->fails()) {
@@ -50,8 +47,8 @@ class TicketController extends Controller
 
         $action($validator->validated());
 
-        return redirect()->route('bookshelves.index')
-            ->with('success', __('messages.bookshelves.created'));
+        return redirect()->route('tickets.index')
+            ->with('success', __('messages.tickets.created'));
     }
 
     /**
@@ -67,16 +64,12 @@ class TicketController extends Controller
      */
     public function edit(Request $request, Ticket $ticket)
     {
-        $zones=Zone::with('genre')->get();
-        $floors=Floor::all();
-        $selectedFloor=Floor::where('id', Zone::where('id', $ticket->zone_id)->first()->floor_id)->first()->id;
-        return Inertia::render('bookshelves/Edit', [
+        return Inertia::render('tickets/Edit', [
             'ticket' => $ticket,
+            'user' => $ticket->user->email,
+            'flight' => $ticket->flight->code,
             'page' => $request->query('page'),
             'perPage' => $request->query('perPage'),
-            'arrayZones' => $zones,
-            'arrayFloors' => $floors,
-            'selectedFloor' => $selectedFloor
         ]);
     }
 
@@ -86,9 +79,8 @@ class TicketController extends Controller
     public function update(Request $request, Ticket $ticket, TicketUpdateAction $action)
     {
         $validator = Validator::make($request->all(), [
-            'number' => ['required', 'numeric'],
-            'capacity' => ['required', 'numeric'],
-            'zone_id' => ['required', 'string', 'max:255'],
+            'user' => ['required', 'string', 'max:255'],
+            'flight' => ['required', 'string', 'min:4', 'max:4'],
 
         ]);
 
@@ -98,7 +90,7 @@ class TicketController extends Controller
 
         $action($ticket, $validator->validated());
 
-        $redirectUrl = route('bookshelves.index');
+        $redirectUrl = route('tickets.index');
 
         // Añadir parámetros de página a la redirección si existen
         if ($request->has('page')) {
@@ -109,7 +101,7 @@ class TicketController extends Controller
         }
 
         return redirect($redirectUrl)
-            ->with('success', __('messages.bookshelves.updated'));
+            ->with('success', __('messages.tickets.updated'));
     }
 
     /**
@@ -119,7 +111,7 @@ class TicketController extends Controller
     {
         $action($ticket);
 
-        return redirect()->route('bookshelves.index')
-            ->with('success', __('messages.bookshelves.deleted'));
+        return redirect()->route('tickets.index')
+            ->with('success', __('messages.tickets.deleted'));
     }
 }

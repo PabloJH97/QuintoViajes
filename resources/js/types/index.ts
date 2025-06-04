@@ -23,6 +23,7 @@ export interface PageProps {
   translations: {
     ui: Record<string, any>;
     messages: Record<string, any>;
+    validation: Record<string, any>;
   };
   flash: {
     success?: string;

@@ -28,7 +28,12 @@ class FlightApiController extends Controller
     public function store(Request $request, FlightStoreAction $action)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'min:4', 'max:4'],
+            'plane_id' => ['required', 'string', 'max:255'],
+            'origin' => ['required', 'string', 'max:255'],
+            'destination' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'max:255'],
+            'seats' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {
@@ -46,7 +51,12 @@ class FlightApiController extends Controller
     public function update(Request $request, Flight $flight, FlightUpdateAction $action)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'min:4', 'max:4'],
+            'plane_id' => ['required', 'string', 'max:255'],
+            'origin' => ['required', 'string', 'max:255'],
+            'destination' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'max:255'],
+            'seats' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {
