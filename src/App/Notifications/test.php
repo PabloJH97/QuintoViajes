@@ -36,8 +36,8 @@ class test extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->line('Test')
-            ->action('Hola buena tarde visite nuestra quintoviajes muchas gracias', url('/'))
-            ->line('Este correo se manda cuando se elimina un usuario');
+            ->action('Hola buena tarde esto es un test', url('/'))
+            ->line('Este correo se manda cuando se crea un billete');
     }
 
     /**
