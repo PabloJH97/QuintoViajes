@@ -27,6 +27,7 @@ class UserController extends Controller
 
     public function create()
     {
+        Gate::authorize('users.create');
         $role=Role::all();
 
         $arrayPermissions=[];
@@ -46,15 +47,10 @@ class UserController extends Controller
         if($user_id){
             $user=User::find($user_id);
         }
-        $loans=$user->loans->all();
-        foreach($loans as $loan){
-            array_push($media, $loan->book->getFirstMediaUrl('images'));
-            array_push($history, $loan);
-        }
-        $reservations=$user->reservations->all();
-        foreach($reservations as $reservation){
-            array_push($media, $reservation->book->getFirstMediaUrl('images'));
-            array_push($history, $reservation);
+        $tickets=$user->tickets->all();
+        foreach($tickets as $ticket){
+            array_push($media, $ticket->flight->plane->getFirstMediaUrl('images'));
+            array_push($history, $ticket);
         }
         $history=collect($history)->sortBy('created_at')->toArray();
         $keys=array_keys($history);
@@ -67,6 +63,7 @@ class UserController extends Controller
 
     public function store(Request $request, UserStoreAction $action)
     {
+        Gate::authorize('users.create');
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -85,6 +82,7 @@ class UserController extends Controller
 
     public function edit(Request $request, User $user)
     {
+        Gate::authorize('users.edit');
         $role=Role::all();
 
         $arrayPermissions=[];
@@ -103,6 +101,7 @@ class UserController extends Controller
 
     public function update(Request $request, User $user, UserUpdateAction $action)
     {
+        Gate::authorize('users.edit');
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -137,6 +136,7 @@ class UserController extends Controller
 
     public function destroy(User $user, UserDestroyAction $action)
     {
+        Gate::authorize('users.delete');
         $action($user);
 
         return redirect()->route('users.index')

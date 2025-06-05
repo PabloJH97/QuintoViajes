@@ -46,6 +46,10 @@ class Ticket extends Model implements HasMedia
         'flight_id',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:m/d/Y',
+    ];
+
     public function flight(): BelongsTo
     {
         return $this->belongsTo(Flight::class)->withTrashed();

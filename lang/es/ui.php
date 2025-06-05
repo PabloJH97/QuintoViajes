@@ -286,6 +286,7 @@ return [
             'deleting' => 'Eliminando...',
             'saving' => 'Guardando...',
             'retry' => 'Reintentar',
+            'history' => 'Historial',
         ],
         'delete' => [
             'title' => '¿Estás seguro?',
@@ -340,11 +341,9 @@ return [
         ],
         'history'=>[
             'title'=>'Historial',
-            'has_reserved'=>'El usuario ha reservado el libro ',
-            'has_loan'=>'El usuario tiene prestado el libro ',
-            'is_overdue'=>'El usuario todavía no ha devuelto el libro ',
-            'returned_overdue'=>'El usuario ha devuelto tarde el libro ',
-            'has_returned'=>'El usuario ha devuelto a tiempo el libro ',
+            'ticket' => 'El usuario ha comprado un billete para el vuelo ',
+            'origin' => 'Con origen ',
+            'destination' => 'Y destino '
 
         ]
     ],
@@ -475,7 +474,12 @@ return [
             'origin' => 'Origen',
             'destination' => 'Destino',
             'price' => 'Precio',
-            'seats' => 'Asientos',
+            'seats' => [
+                'name' => 'Asientos',
+                '1st' => 'Primera clase',
+                '2nd' => 'Segunda clase',
+                'tourist' => 'Turista',
+            ],
             'date' => 'Fecha',
             'state' => [
                 'name' => 'Estado',
@@ -494,7 +498,12 @@ return [
             'origin' => 'Origen',
             'destination' => 'Destino',
             'price' => 'Precio',
-            'seats' => 'Asientos',
+            'seats' => [
+                'name' => 'Asientos',
+                '1st' => 'Primera clase',
+                '2nd' => 'Segunda clase',
+                'tourist' => 'Turista',
+            ],
             'date' => 'Fecha',
             'state' => [
                 'name' => 'Estado',
@@ -535,10 +544,10 @@ return [
         ],
     ],
     'tickets'=>[
-        'title'=>'Tickets',
-        'description' => 'Gestiona los tickets del sistema',
-        'create' => 'Crear Ticket',
-        'edit' => 'Editar Ticket',
+        'title'=>'Billetes',
+        'description' => 'Gestiona los billetes del sistema',
+        'create' => 'Crear Billete',
+        'edit' => 'Editar Billete',
         'fields' => [
             'user' => 'Usuario',
             'flight' => 'Vuelo',
@@ -567,7 +576,7 @@ return [
             'created_at' => 'Fecha de creación',
         ],
         'buttons' => [
-            'new' => 'Nuevo Ticket',
+            'new' => 'Nuevo Billete',
             'edit' => 'Editar',
             'save' => 'Guardar',
             'update' => 'Actualizar',
@@ -579,16 +588,16 @@ return [
         ],
         'delete' => [
             'title' => '¿Estás seguro?',
-            'description' => 'Esta acción no se puede deshacer. Se eliminará permanentemente el ticket del sistema.',
+            'description' => 'Esta acción no se puede deshacer. Se eliminará permanentemente el billete del sistema.',
         ],
         'delete_dialog' => [
             'title' => '¿Estás seguro?',
-            'description' => 'Esta acción no se puede deshacer. Se eliminará permanentemente el ticket del sistema.',
+            'description' => 'Esta acción no se puede deshacer. Se eliminará permanentemente el billete del sistema.',
             'success' => 'Eliminado correctamente ;)',
         ],
-        'deleted_error' => 'Error al eliminar el ticket',
+        'deleted_error' => 'Error al eliminar el billete',
         'no_results' => 'No hay resultados.',
-        'error_loading' => 'Error al cargar los tickets. Por favor, inténtalo de nuevo.',
+        'error_loading' => 'Error al cargar los billetes. Por favor, inténtalo de nuevo.',
         'showing_results' => 'Mostrando :from a :to de :total resultados',
         'pagination' => [
             'previous' => 'Anterior',

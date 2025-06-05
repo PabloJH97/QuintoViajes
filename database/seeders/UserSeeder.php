@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
                 'name' => 'Pablo',
                 'email' => 'pablo@example.com',
             ]);
+            $user->syncPermissions(['products.view', 'config.access', 'config.modify']);
         }
 
 

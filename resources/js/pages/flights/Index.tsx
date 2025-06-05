@@ -3,10 +3,10 @@ import { Input } from "@/components/ui/input";
 import { TableSkeleton } from "@/components/stack-table/TableSkeleton";
 import { UserLayout } from "@/layouts/users/UserLayout";
 import { User, useDeleteUser, useUsers } from "@/hooks/users/useUsers";
-import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { PencilIcon, PlusIcon, ShoppingCart, TrashIcon } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useState, useMemo } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Table } from "@/components/stack-table/Table";
 import { createTextColumn, createDateColumn, createActionsColumn } from "@/components/stack-table/columnsTable";
@@ -81,6 +81,17 @@ export default function FlightsIndex() {
       console.error("Error deleting flight:", error);
     }
   };
+  function handleCreateTicket(code: string){
+    router.get(`tickets/create`, {code})
+  }
+
+  function ShopButton(code: string){
+    return(
+        <Button variant="outline" size="icon" title={t("ui.flights.buttons.shop") || "Buy a ticket"} onClick={()=>handleCreateTicket(code.code)}>
+            <ShoppingCart></ShoppingCart>
+        </Button>
+    )
+  }
 
   const columns = useMemo(() => ([
     createTextColumn<Flight>({
@@ -151,6 +162,7 @@ export default function FlightsIndex() {
       header: t("ui.flights.columns.actions") || "Actions",
       renderActions: (flight) => (
         <>
+        <ShopButton code={flight.code}></ShopButton>
           <Link href={`/flights/${flight.id}/edit?page=${currentPage}&perPage=${perPage}`}>
             <Button variant="outline" size="icon" title={t("ui.flights.buttons.edit") || "Edit flight"}>
               <PencilIcon className="h-4 w-4" />
@@ -201,7 +213,7 @@ export default function FlightsIndex() {
                                       id: 'plane',
                                       label: t('ui.flights.filters.plane') || 'Plane',
                                       type: 'text',
-                                      placeholder: t('ui.flights.placeholders.name') || 'Plane...',
+                                      placeholder: t('ui.flights.placeholders.plane') || 'Plane...',
                                   },
                                   {
                                       id: 'origin',
@@ -225,7 +237,7 @@ export default function FlightsIndex() {
                                       id: 'seats',
                                       label: t('ui.flights.filters.seats.name') || 'Seats',
                                       type: 'select',
-                                      options: [{value:'1st', label:t('ui.flights.filters.seats.1st')}, {value:'2nd', label: t('ui.flights.filters.seats.2nd')}, {value:'tourist', label: t('ui.flights.filters.seats.tousit')}],
+                                      options: [{value:'1st', label:t('ui.flights.filters.seats.1st')}, {value:'2nd', label: t('ui.flights.filters.seats.2nd')}, {value:'tourist', label: t('ui.flights.filters.seats.tourist')}],
                                       placeholder: t('ui.flights.placeholders.seats.name') || 'Seats...',
                                   },
                                   {

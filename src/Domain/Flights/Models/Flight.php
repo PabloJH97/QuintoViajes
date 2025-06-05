@@ -53,6 +53,10 @@ class Flight extends Model implements HasMedia
         'state'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:m/d/Y',
+    ];
+
     public function plane(): BelongsTo
     {
         return $this->belongsTo(Plane::class)->withTrashed();

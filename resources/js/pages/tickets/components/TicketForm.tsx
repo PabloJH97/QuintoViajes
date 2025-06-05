@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslations } from '@/hooks/use-translations';
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import type { AnyFieldApi } from '@tanstack/react-form';
 import { useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
@@ -22,6 +22,14 @@ interface TicketFormProps {
     pageTitle?: string;
     user?: string;
     flight?: string;
+    flightCode?: string | null;
+}
+
+interface PageProps {
+    auth: {
+        user: any;
+        permissions: string[];
+    };
 }
 
 // Field error display component
@@ -35,16 +43,16 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
         </>
     );
 }
-
-export function TicketForm({ initialData, page, perPage, pageTitle, user, flight }: TicketFormProps) {
+export function TicketForm({ initialData, page, perPage, pageTitle, user, flight, flightCode }: TicketFormProps) {
     const { t } = useTranslations();
     const queryClient = useQueryClient();
-
+    const pageAuth = usePage<{ props: PageProps }>();
+    const auth = pageAuth.props.auth;
     // TanStack Form setup
     const form = useForm({
         defaultValues: {
-            user: user ?? '',
-            flight: flight ?? '',
+            user: flightCode ? auth.user.email : user ?? '',
+            flight: flight ?? flightCode ?? '',
             seats: initialData?.seats ?? '',
         },
         onSubmit: async ({ value }) => {
@@ -117,7 +125,7 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                                     onChange={(e) => field.handleChange(e.target.value)}
                                     onBlur={field.handleBlur}
                                     placeholder={t('ui.tickets.placeholders.user')}
-                                    disabled={form.state.isSubmitting}
+                                    disabled={form.state.isSubmitting || flightCode}
                                     required={false}
                                     autoComplete="off"
                                 />
@@ -155,7 +163,7 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                                     onChange={(e) => field.handleChange(e.target.value)}
                                     onBlur={field.handleBlur}
                                     placeholder={t('ui.tickets.placeholders.flight')}
-                                    disabled={form.state.isSubmitting}
+                                    disabled={form.state.isSubmitting||flightCode}
                                     required={false}
                                     autoComplete="off"
                                 />
@@ -168,16 +176,16 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                 <div>
                     <form.Field
                         name="seats"
-                        validators={{
-                            onChangeAsync: async ({ value }) => {
-                                await new Promise((resolve) => setTimeout(resolve, 500));
-                                return !value
-                                    ? t('ui.validation.required', { attribute: t('ui.flights.fields.seats.name').toLowerCase() })
-                                    : value.length != 4
-                                      ? t('ui.validation.size.string', { attribute: t('ui.flights.fields.seats.name').toLowerCase(), size: '4' })
-                                      : undefined;
-                            },
-                        }}
+                        // validators={{
+                        //     onChangeAsync: async ({ value }) => {
+                        //         await new Promise((resolve) => setTimeout(resolve, 500));
+                        //         return !value
+                        //             ? t('ui.validation.required', { attribute: t('ui.flights.fields.seats.name').toLowerCase() })
+                        //             : value.length != 4
+                        //               ? t('ui.validation.size.string', { attribute: t('ui.flights.fields.seats.name').toLowerCase(), size: '4' })
+                        //               : undefined;
+                        //     },
+                        // }}
                     >
                         {(field) => (
                             <>
