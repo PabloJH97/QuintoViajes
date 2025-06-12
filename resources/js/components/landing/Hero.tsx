@@ -13,11 +13,11 @@ export default function Hero({ auth }: HeroProps) {
                 <div className="grid items-center gap-12 md:grid-cols-2">
                     <div className="text-center md:text-left">
                         <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-                            Gestión Integral de <span className="text-primary dark:text-primary-foreground">Quintoviajess</span>
+                            <span className="text-primary dark:text-primary-foreground">Quintoviajes</span>
                         </h1>
                         <p className="mb-8 text-lg text-gray-600 dark:text-gray-300">
-                            Una plataforma completa para administrar múltiples quintoviajess, 
-                            gestionar préstamos, catálogos y usuarios de manera eficiente.
+                            Una plataforma completa para administrar múltiples vuelos,
+                            comprar y gestionar sus billetes.
                         </p>
                         <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 md:justify-start">
                             <Link

@@ -44,6 +44,15 @@ export function AppSidebar() {
             },
         )
     }
+    {auth.permissions.includes('reports.view')&&
+        items.push(
+            {
+                title: t('ui.navigation.items.planes'),
+                url: '/planes',
+                icon: Plane,
+            }
+        )
+    }
     items.push(
         {
             title: t('ui.navigation.items.flights'),

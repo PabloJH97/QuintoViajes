@@ -18,16 +18,13 @@ export default function Welcome() {
 
     return (
         <>
-            <Head title="Quintoviajes 2025 - Sistema de Gestión de Quintoviajess">
+            <Head title="Quintoviajes">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
             <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 text-gray-900 dark:from-gray-900 dark:to-gray-800 dark:text-white">
                 <Header auth={auth as { user: any }} />
                 <Hero auth={auth as { user: any }} />
-                <Features />
-                <Benefits />
-                <Cta auth={auth as { user: any }} />
                 <Footer />
             </div>
         </>
