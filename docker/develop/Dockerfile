@@ -30,3 +30,4 @@ RUN addgroup -g 1000 -S laravel && \
     adduser -u 1000 -S laravel -G laravel
 
 USER laravel
+

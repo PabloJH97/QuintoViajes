@@ -1,0 +1,46 @@
+services:
+  app:  # Combina PHP + Nginx + Vite (frontend compilado)
+    build:
+      context: .
+      dockerfile: ./docker/production/Dockerfile  # Nuevo Dockerfile multi-etapa
+    container_name: quintoviajes-app
+    ports:
+      - "${PORT:-80}:80"  # Railway asigna el puerto
+    environment:
+      - DB_HOST=pgsql
+      - REDIS_HOST=redis
+    depends_on:
+      - pgsql
+      - redis
+    networks:
+      - quintoviajes-net
+
+  pgsql:  # Base de datos (PostgreSQL)
+    image: postgres:17
+    container_name: quintoviajes-pgsql
+    environment:
+      POSTGRES_DB: "${DB_DATABASE}"
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - quintoviajes-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:  # Cache/cola (Redis)
+    image: redis:latest
+    container_name: quintoviajes-redis
+    networks:
+      - quintoviajes-net
+
+networks:
+  quintoviajes-net:
+    driver: bridge
+
+volumes:
+  pgdata:
