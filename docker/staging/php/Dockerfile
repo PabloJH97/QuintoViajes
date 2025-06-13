@@ -13,6 +13,7 @@ COPY composer.json composer.lock* ./
 
 RUN composer install \
     --no-interaction \
+    --no-dev \
     --no-progress \
     --prefer-dist \
     --no-scripts \
