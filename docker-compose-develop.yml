@@ -1,10 +1,6 @@
 services:
   php:
-    build:
-      context: .
-      dockerfile: ./docker/develop/Dockerfile
-    container_name: quintoviajes-php
-    image: quintoviajes-back
+    image: pablojh97/quintoviajes:latest
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -16,7 +12,7 @@ services:
       - quintoviajes-back
   vite:
     container_name: quintoviajes-vite
-    image: quintoviajes-back
+    image: pablojh97/quintoviajes:latest
     user: laravel
     volumes:
       - .:/var/www/html
@@ -93,7 +89,7 @@ services:
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
   cron:
     container_name: quintoviajes-cron
-    image: quintoviajes-back
+    image: pablojh97/quintoviajes:latest
     volumes:
       - .:/var/www/html
       - ./docker/develop/cron/laravel:/var/spool/cron/crontabs/laravel
@@ -107,7 +103,7 @@ services:
       - quintoviajes-back
   horizon:
     container_name: quintoviajes-horizon
-    image: quintoviajes-back
+    image: pablojh97/quintoviajes:latest
     volumes:
       - .:/var/www/html
     command: [ "php", "artisan", "horizon" ]
@@ -119,7 +115,7 @@ services:
       - quintoviajes-back
   pulse:
     container_name: quintoviajes-pulse
-    image: quintoviajes-back
+    image: pablojh97/quintoviajes:latest
     volumes:
       - .:/var/www/html
     command: [ "php", "artisan", "pulse:check" ]
@@ -131,7 +127,7 @@ services:
       - quintoviajes-back
   reverb:
     container_name: quintoviajes-reverb
-    image: quintoviajes-back
+    image: pablojh97/quintoviajes:latest
     volumes:
       - .:/var/www/html
     command: ["php", "artisan", "reverb:start", "--debug"]
