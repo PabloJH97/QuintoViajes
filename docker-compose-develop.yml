@@ -23,7 +23,7 @@ services:
     networks:
       - quintoviajes-back
   nginx:
-    image: nginx:latest
+    image: pablojh97/nginx:latest
     container_name: quintoviajes-nginx
     restart: unless-stopped
     expose:
@@ -40,7 +40,7 @@ services:
       - nginx-proxy
       - quintoviajes-back
   pgsql:
-    image: 'postgres:17'
+    image: 'pablojh97/postgres:17'
     container_name: quintoviajes-pgsql
     ports:
       - '${FORWARD_DB_PORT:-5432}:5432'
@@ -66,14 +66,14 @@ services:
       retries: 3
       timeout: 5s
   redis:
-    image: redis:latest
+    image: pablojh97/redis:latest
     container_name: quintoviajes-redis
     ports:
       - "6379:6379"
     networks:
       - quintoviajes-back
   mailpit:
-    image: axllent/mailpit
+    image: pablojh97/mailpit:latest
     container_name: quintoviajes-mailpit
     volumes:
       - ./docker/develop/mailpit/data:/data
@@ -144,7 +144,7 @@ services:
       - nginx-proxy
       - quintoviajes-back
   typesense:
-    image: 'typesense/typesense:0.25.2'
+    image: 'pablojh97/typesense:latest'
     container_name: quintoviajes-typesense
     ports:
       - '${FORWARD_TYPESENSE_PORT:-8108}:8108'
@@ -167,7 +167,7 @@ services:
       retries: 5
       timeout: 7s
   selenium:
-    image: 'seleniarm/standalone-chromium'
+    image: 'pablojh97/selenium:latest'
     container_name: quintoviajes-selenium
     extra_hosts:
       - 'host.docker.internal:host-gateway'
@@ -178,7 +178,7 @@ services:
       - nginx-proxy
       - quintoviajes-back
   nginx-proxy:
-    image: nginxproxy/nginx-proxy
+    image: pablojh97/nginx-proxy:latest
     container_name: nginx-proxy
     ports:
       - "80:80"

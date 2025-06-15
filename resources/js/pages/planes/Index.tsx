@@ -147,7 +147,7 @@ export default function PlanesIndex() {
                                       id: 'capacity',
                                       label: t('ui.planes.filters.capacity') || 'Capacity',
                                       type: 'number',
-                                      placeholder: t('ui.planes.placeholders.name') || 'Capacity...',
+                                      placeholder: t('ui.planes.placeholders.capacity') || 'Capacity...',
                                   },
                                   {
                                       id: 'created_at',

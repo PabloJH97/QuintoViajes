@@ -9,14 +9,6 @@ return [
             'planes' => 'Planes',
             'flights' => 'Flights',
             'tickets' => 'Tickets',
-            'floors' => 'Floors',
-            'zones' => 'Zones',
-            'bookshelves' => 'Bookshelves',
-            'books' => 'Books',
-            'loans' => 'Loans',
-            'reservations' => 'Reservations',
-            'repository' => 'Repository',
-            'documentation' => 'Documentation',
         ],
     ],
     'user_menu' => [
@@ -274,7 +266,12 @@ return [
             'origin' => 'Origin',
             'destination' => 'Destination',
             'price' => 'Price',
-            'seats' => 'Seats',
+            'seats' => [
+                'name' => 'Seats',
+                '1st' => 'First class',
+                '2nd' => 'Second class',
+                'tourist' => 'Tourist',
+            ],
             'date' => 'Date',
             'state' => [
                 'name' => 'State',
@@ -291,7 +288,12 @@ return [
             'origin' => 'Origin',
             'destination' => 'Destination',
             'price' => 'Price',
-            'seats' => 'Seats',
+            'seats' => [
+                'name' => 'Seats',
+                '1st' => 'First class',
+                '2nd' => 'Second class',
+                'tourist' => 'Tourist',
+            ],
             'date' => 'Date',
             'state' => [
                 'name' => 'State',
@@ -309,7 +311,12 @@ return [
             'origin' => 'Origin',
             'destination' => 'Destination',
             'price' => 'Price',
-            'seats' => 'Seats',
+            'seats' => [
+                'name' => 'Seats',
+                '1st' => 'First class',
+                '2nd' => 'Second class',
+                'tourist' => 'Tourist',
+            ],
             'date' => 'Date',
             'state' => [
                 'name' => 'State',
@@ -328,7 +335,12 @@ return [
             'origin' => 'Origin',
             'destination' => 'Destination',
             'price' => 'Price',
-            'seats' => 'Seats',
+            'seats' => [
+                'name' => 'Seats',
+                '1st' => 'First class',
+                '2nd' => 'Second class',
+                'tourist' => 'Tourist',
+            ],
             'date' => 'Date',
             'state' => [
                 'name' => 'State',

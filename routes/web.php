@@ -18,9 +18,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('flights', \App\Flights\Controllers\FlightController::class);
     Route::resource('planes', \App\Planes\Controllers\PlaneController::class);
     Route::resource('tickets', \App\Tickets\Controllers\TicketController::class);
-    // Route::resource('planes', \App\Planes\Controllers\PlaneController::class);
-    // Route::resource('tickets', \App\Tickets\Controllers\TicketController::class);
-
 });
 
 require __DIR__.'/settings.php';

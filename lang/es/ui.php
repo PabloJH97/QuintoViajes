@@ -10,13 +10,6 @@ return [
             'planes' => 'Aviones',
             'flights' => 'Vuelos',
             'tickets' => 'Tickets',
-            'floors' => 'Pisos',
-            'zones' => 'Zonas',
-            'bookshelves' => 'Estanterías',
-            'books' => 'Libros',
-            'loans' => 'Préstamos',
-            'reservations' => 'Reservas',
-
         ],
     ],
     'user_menu' => [
