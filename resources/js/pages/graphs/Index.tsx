@@ -28,7 +28,7 @@ import { Option, Select } from "react-day-picker";
 interface GraphProps extends PageProps{
     data:{
         userData: any[];
-        bookData: any[];
+        flightData: any[];
         zoneData: any[];
     };
 
@@ -46,15 +46,9 @@ export default function GraphsIndex({data}:GraphProps) {
 
   const [graphState, setGraphState]=useState('user');
 
-  function ZoneRadarChart(){
+  function FlightBarChart(){
     return(
-        <SimpleRadarChart data={data.zoneData}></SimpleRadarChart>
-    )
-  }
-
-  function BookBarChart(){
-    return(
-        <SimpleBarChart data={data.bookData}></SimpleBarChart>
+        <SimpleBarChart data={data.flightData}></SimpleBarChart>
     )
   }
 
@@ -73,19 +67,17 @@ export default function GraphsIndex({data}:GraphProps) {
             onChange={(e)=>setGraphState(e.target.value)}
         >
             <Option value={'user'}>{t('ui.graphs.options.user')}</Option>
-            <Option value={'book'}>{t('ui.graphs.options.book')}</Option>
-            <Option value={'zone'}>{t('ui.graphs.options.zone')}</Option>
+            <Option value={'flight'}>{t('ui.graphs.options.flight')}</Option>
         </Select>
     </div>
     {graphState==='user'&&<UserBarChart></UserBarChart>}
-    {graphState==='book'&&<BookBarChart></BookBarChart>}
-    {graphState==='zone'&&<ZoneRadarChart></ZoneRadarChart>}
+    {graphState==='flight'&&<FlightBarChart></FlightBarChart>}
     </>
     )
   }
 
   return (
-      <GraphLayout title={t('ui.loans.title')}>
+      <GraphLayout title={t('ui.graphs.title')}>
         <Graph></Graph>
       </GraphLayout>
   );

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->unique()->primary();
             $table->foreignUuid('user_id')->constrained(table:'users', indexName:'ticket_id_user')->cascadeOnDelete();
             $table->foreignUuid('flight_id')->constrained(table:'flights', indexName:'ticket_id_flight')->cascadeOnDelete();
+            $table->string('seats');
             $table->timestamps();
             $table->softDeletes();
         });

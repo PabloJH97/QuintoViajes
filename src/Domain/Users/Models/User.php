@@ -72,6 +72,10 @@ class User extends Authenticatable
         ];
     }
 
+    public $totalActions;
+
+    protected $appends = array();
+
     /**
      * Get the settings associated with the user.
      */

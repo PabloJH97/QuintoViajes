@@ -87,6 +87,10 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
         },
     });
 
+    function changeSeatsValue(seat: string){
+        form.setFieldValue('seats', seat);
+    }
+
     // Form submission handler
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -203,6 +207,7 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                                             onBlur={field.handleBlur}
                                             placeholder={t('ui.flights.placeholders.price')}
                                             disabled={form.state.isSubmitting}
+                                            onChange={(e)=>changeSeatsValue(e.target.value)}
                                             required={false}
                                             autoComplete="off"
                                             className="w-auto"
@@ -218,6 +223,7 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                                             onBlur={field.handleBlur}
                                             placeholder={t('ui.flights.placeholders.price')}
                                             disabled={form.state.isSubmitting}
+                                            onChange={(e)=>changeSeatsValue(e.target.value)}
                                             required={false}
                                             autoComplete="off"
                                             className="w-auto"
@@ -233,6 +239,7 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                                             onBlur={field.handleBlur}
                                             placeholder={t('ui.flights.placeholders.price')}
                                             disabled={form.state.isSubmitting}
+                                            onChange={(e)=>changeSeatsValue(e.target.value)}
                                             required={false}
                                             autoComplete="off"
                                             className="w-auto"

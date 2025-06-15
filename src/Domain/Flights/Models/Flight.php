@@ -53,6 +53,10 @@ class Flight extends Model implements HasMedia
         'state'
     ];
 
+    public $totalActions;
+
+    protected $appends = array();
+
     protected $casts = [
         'created_at' => 'datetime:m/d/Y',
     ];
