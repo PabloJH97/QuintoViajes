@@ -11,6 +11,7 @@ use Domain\Flights\Models\Flight;
 use Domain\Floors\Models\Floor;
 use Domain\Planes\Models\Plane;
 use Domain\Zones\Models\Zone;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -29,6 +30,7 @@ class FlightController extends Controller
      */
     public function create()
     {
+        Gate::authorize('products.create');
         $planes=Plane::all();
         return Inertia::render('flights/Create', ['arrayPlanes' => $planes]);
     }
@@ -38,6 +40,7 @@ class FlightController extends Controller
      */
     public function store(Request $request, FlightStoreAction $action)
     {
+        Gate::authorize('products.create');
         $validator = Validator::make($request->all(), [
             'code' => ['required', 'string', 'min:4', 'max:4'],
             'planeCode' => ['required', 'string', 'min:4', 'max:4'],
@@ -71,6 +74,7 @@ class FlightController extends Controller
      */
     public function edit(Request $request, Flight $flight)
     {
+        Gate::authorize('products.edit');
         return Inertia::render('flights/Edit', [
             'flight' => $flight,
             'page' => $request->query('page'),
@@ -84,22 +88,28 @@ class FlightController extends Controller
      */
     public function update(Request $request, Flight $flight, FlightUpdateAction $action)
     {
-        $validator = Validator::make($request->all(), [
-            'code' => ['required', 'string', 'min:4', 'max:4'],
-            'planeCode' => ['required', 'string', 'min:4', 'max:4'],
-            'origin' => ['required', 'string', 'max:255'],
-            'destination' => ['required', 'string', 'max:255'],
-            'price' => ['required', 'numeric', 'max:255'],
-            'seats' => ['required'],
-            'date' => ['required'],
+        Gate::authorize('products.edit');
+        if($request['confirm']){
+            $action($flight, $request->toArray());
+        }else{
+            $validator = Validator::make($request->all(), [
+                'code' => ['required', 'string', 'min:4', 'max:4'],
+                'planeCode' => ['required', 'string', 'min:4', 'max:4'],
+                'origin' => ['required', 'string', 'max:255'],
+                'destination' => ['required', 'string', 'max:255'],
+                'price' => ['required', 'numeric', 'max:255'],
+                'seats' => ['required'],
+                'date' => ['required'],
 
-        ]);
+            ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
+            if ($validator->fails()) {
+                return back()->withErrors($validator);
+            }
+
+            $action($flight, $validator->validated());
+
         }
-
-        $action($flight, $validator->validated());
 
         $redirectUrl = route('flights.index');
 
@@ -120,6 +130,7 @@ class FlightController extends Controller
      */
     public function destroy(Flight $flight, FlightDestroyAction $action)
     {
+        Gate::authorize('products.delete');
         $action($flight);
 
         return redirect()->route('flights.index')

@@ -10,6 +10,7 @@ use Domain\Tickets\Actions\TicketUpdateAction;
 use Domain\Tickets\Models\Ticket;
 use Domain\Floors\Models\Floor;
 use Domain\Zones\Models\Zone;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -28,6 +29,7 @@ class TicketController extends Controller
      */
     public function create()
     {
+
         return Inertia::render('tickets/Create', []);
     }
 
@@ -36,10 +38,10 @@ class TicketController extends Controller
      */
     public function store(Request $request, TicketStoreAction $action)
     {
-        dd($request);
         $validator = Validator::make($request->all(), [
             'user' => ['required', 'string', 'max:255'],
             'flight' => ['required', 'string', 'min:4', 'max:4'],
+            'seats' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {
@@ -65,6 +67,7 @@ class TicketController extends Controller
      */
     public function edit(Request $request, Ticket $ticket)
     {
+        Gate::authorize('products.edit');
         return Inertia::render('tickets/Edit', [
             'ticket' => $ticket,
             'user' => $ticket->user->email,
@@ -79,9 +82,11 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket, TicketUpdateAction $action)
     {
+        Gate::authorize('products.edit');
         $validator = Validator::make($request->all(), [
             'user' => ['required', 'string', 'max:255'],
             'flight' => ['required', 'string', 'min:4', 'max:4'],
+            'seats' => ['required', 'string'],
 
         ]);
 
@@ -110,6 +115,7 @@ class TicketController extends Controller
      */
     public function destroy(Ticket $ticket, TicketDestroyAction $action)
     {
+        Gate::authorize('products.delete');
         $action($ticket);
 
         return redirect()->route('tickets.index')

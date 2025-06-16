@@ -39,10 +39,10 @@ export default function Hero({ auth }: HeroProps) {
                         <div className="relative mx-auto grid h-full w-full max-w-[300px] grid-cols-2 gap-4 sm:max-w-[350px] md:max-w-[400px]">
                             <div className="flex flex-col gap-4">
                                 <div className="h-32 rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800">
-                                    <svg className="mb-2 h-8 w-8 text-gray-900 dark:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                                    <svg className="mb-2 h-8 w-8 text-gray-900 dark:text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
+                                        <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
                                     </svg>
-                                    <p className="text-sm font-medium">Gestión de Libros</p>
+                                    <p className="text-sm font-medium">Gestión de vuelos</p>
                                 </div>
                                 <div className="h-40 rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800">
                                     <svg className="mb-2 h-8 w-8 text-gray-900 dark:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -69,7 +69,7 @@ export default function Hero({ auth }: HeroProps) {
                                         <path d="M21 12.1H3" />
                                         <path d="M15.1 18H3" />
                                     </svg>
-                                    <p className="text-sm font-medium">Préstamos</p>
+                                    <p className="text-sm font-medium">Compra de billetes</p>
                                 </div>
                             </div>
                         </div>

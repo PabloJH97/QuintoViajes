@@ -202,13 +202,11 @@ export function FiltersTable({
   // Manejar cambios en los filtros
   const handleFilterChange = (id: string, value: any) => {
     if(value!=undefined){
-        console.log("aaa")
         setFilterValues((prev) => ({
         ...prev,
         [id]: value,
         }));
     }else{
-        console.log('bbb')
         setFilterValues((prev) => ({
         ...prev
         }));

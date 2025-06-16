@@ -14,6 +14,7 @@ class TicketUpdateAction
         $updateData = [
             'user_id' => User::where('email', $data['user'])->first()->id,
             'flight_id' => Flight::where('code', $data['flight'])->first()->id,
+            'seats' => $data['seats'],
         ];
 
         $ticket->update($updateData);

@@ -41,6 +41,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        $user->syncPermissions(['products.view', 'config.access', 'config.modify']);
 
         event(new Registered($user));
 

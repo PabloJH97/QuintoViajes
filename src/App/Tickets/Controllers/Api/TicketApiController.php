@@ -30,6 +30,7 @@ class TicketApiController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => ['required', 'numeric', 'max:255'],
             'flight_id' => ['required', 'string', 'max:255'],
+            'seats' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {
@@ -49,6 +50,7 @@ class TicketApiController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => ['required', 'numeric', 'max:255'],
             'flight_id' => ['required', 'string', 'max:255'],
+            'seats' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {

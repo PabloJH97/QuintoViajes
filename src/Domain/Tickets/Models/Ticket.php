@@ -44,6 +44,7 @@ class Ticket extends Model implements HasMedia
         'id',
         'user_id',
         'flight_id',
+        'seats',
     ];
 
     protected $casts = [

@@ -5,6 +5,8 @@ export interface Ticket {
   id: string;
   user: string;
   flight: string;
+  seats: string;
+  date: string;
   created_at: string;
 }
 

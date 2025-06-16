@@ -407,11 +407,7 @@ export function FlightForm({ initialData, page, perPage, pageTitle, planeCode }:
                             <SquareMenu color="#155dfc"></SquareMenu>
                             <h1 className="font-bold">{pageTitle}</h1>
                         </div>
-                        <div>
-                            <p className="font-sans text-sm font-bold text-gray-400">
-                                {'Ingresa la información para crear un nuevo piso en el sistema'}
-                            </p>
-                        </div>
+
                     </CardHeader>
 
                     <div>

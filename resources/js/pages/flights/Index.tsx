@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { TableSkeleton } from "@/components/stack-table/TableSkeleton";
 import { UserLayout } from "@/layouts/users/UserLayout";
 import { User, useDeleteUser, useUsers } from "@/hooks/users/useUsers";
-import { PencilIcon, PlusIcon, ShoppingCart, TrashIcon } from "lucide-react";
+import { Check, PencilIcon, PlusIcon, ShoppingCart, TrashIcon } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useState, useMemo } from "react";
 import { Link, router, usePage } from "@inertiajs/react";
@@ -17,11 +17,18 @@ import { ColumnDef, Row } from "@tanstack/react-table";
 import { FlightLayout } from "@/layouts/flights/FlightLayout";
 import { Flight, useDeleteFlight, useFlights } from "@/hooks/flights/useFlights";
 import { isEmpty } from "lodash";
-
+interface PageProps {
+    auth: {
+        user: any;
+        permissions: string[];
+    };
+}
 
 export default function FlightsIndex() {
   const { t } = useTranslations();
   const { url } = usePage();
+  const page = usePage<{ props: PageProps }>();
+  const auth = page.props.auth;
 
 
   // Obtener los parámetros de la URL actual
@@ -81,14 +88,29 @@ export default function FlightsIndex() {
       console.error("Error deleting flight:", error);
     }
   };
-  function handleCreateTicket(code: string){
-    router.get(`tickets/create`, {code})
+  function handleCreateTicket(code: string, seats: string){
+    router.get(`tickets/create`, {code, seats})
   }
 
-  function ShopButton(code: string){
+  function ShopButton(code: any){
     return(
-        <Button variant="outline" size="icon" title={t("ui.flights.buttons.shop") || "Buy a ticket"} onClick={()=>handleCreateTicket(code.code)}>
+        <Button variant="outline" size="icon" title={t("ui.flights.buttons.shop") || "Buy a ticket"} onClick={()=>handleCreateTicket(code.code[0], code.code[1])}>
             <ShoppingCart></ShoppingCart>
+        </Button>
+    )
+  }
+    function handleConfirmFlight(flight: string[]){
+    const formData=new FormData();
+    formData.append('confirm', flight[1]);
+    formData.append('_method', 'PUT');
+    router.post(`/flights/${flight[0]}`, formData);
+    refetch();
+
+  }
+  function ConfirmFlightButton(id: string){
+    return(
+        <Button variant="outline" size="icon" title={t("ui.flights.buttons.confirm") || "Confirm flight"} onClick={()=>{handleConfirmFlight([id.id, 'true'])}}>
+            <Check className="h-4 w-4" />
         </Button>
     )
   }
@@ -162,12 +184,15 @@ export default function FlightsIndex() {
       header: t("ui.flights.columns.actions") || "Actions",
       renderActions: (flight) => (
         <>
-        <ShopButton code={flight.code}></ShopButton>
+        {flight.state==='draft' ? <ConfirmFlightButton id={flight.id}></ConfirmFlightButton> : <ShopButton code={[flight.code, flight.seats]}></ShopButton>}
+        {auth.permissions.includes('products.edit')&&
           <Link href={`/flights/${flight.id}/edit?page=${currentPage}&perPage=${perPage}`}>
             <Button variant="outline" size="icon" title={t("ui.flights.buttons.edit") || "Edit flight"}>
               <PencilIcon className="h-4 w-4" />
             </Button>
           </Link>
+        }
+        {auth.permissions.includes('products.delete')&&
           <DeleteDialog
             id={flight.id}
             onDelete={handleDeleteFlight}
@@ -179,6 +204,7 @@ export default function FlightsIndex() {
               </Button>
             }
           />
+        }
         </>
       ),
     }),
@@ -190,12 +216,14 @@ export default function FlightsIndex() {
               <div className="space-y-6">
                   <div className="flex items-center justify-between">
                       <h1 className="text-3xl font-bold">{t('ui.flights.title')}</h1>
+                      {auth.permissions.includes('products.create')&&
                       <Link href="/flights/create">
                           <Button>
                               <PlusIcon className="mr-2 h-4 w-4" />
                               {t('ui.flights.buttons.new')}
                           </Button>
                       </Link>
+                      }
                   </div>
                   <div></div>
 

@@ -10,6 +10,7 @@ use Domain\Planes\Actions\PlaneUpdateAction;
 use Domain\Planes\Models\Plane;
 use Domain\Floors\Models\Floor;
 use Domain\Zones\Models\Zone;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -20,6 +21,7 @@ class PlaneController extends Controller
      */
     public function index()
     {
+        Gate::authorize('reports.view');
         return Inertia::render('planes/Index');
     }
 
@@ -28,6 +30,7 @@ class PlaneController extends Controller
      */
     public function create()
     {
+        Gate::authorize('products.create');
         return Inertia::render('planes/Create', []);
     }
 
@@ -36,6 +39,7 @@ class PlaneController extends Controller
      */
     public function store(Request $request, PlaneStoreAction $action)
     {
+        Gate::authorize('products.create');
         $validator = Validator::make($request->all(), [
             'code' => ['required', 'string', 'min:4', 'max:4'],
             'capacity' => ['required', 'numeric', 'max:255'],
@@ -64,7 +68,7 @@ class PlaneController extends Controller
      */
     public function edit(Request $request, Plane $plane)
     {
-
+        Gate::authorize('products.edit');
         return Inertia::render('planes/Edit', [
             'plane' => $plane,
             'page' => $request->query('page'),
@@ -77,6 +81,7 @@ class PlaneController extends Controller
      */
     public function update(Request $request, Plane $plane, PlaneUpdateAction $action)
     {
+        Gate::authorize('products.edit');
         $validator = Validator::make($request->all(), [
             'code' => ['required', 'string', 'min:4', 'max:4'],
             'capacity' => ['required', 'numeric', 'max:255'],
@@ -107,6 +112,7 @@ class PlaneController extends Controller
      */
     public function destroy(Plane $plane, PlaneDestroyAction $action)
     {
+        Gate::authorize('products.delete');
         $action($plane);
 
         return redirect()->route('planes.index')

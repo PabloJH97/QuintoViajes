@@ -2,6 +2,7 @@
 
 use App\Notifications\LoanLateMail;
 use Domain\Books\Models\Book;
+use Domain\Flights\Models\Flight;
 use Domain\Loans\Models\Loan;
 use Domain\Users\Models\User;
 use Illuminate\Foundation\Inspiring;
@@ -14,20 +15,21 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::call(function(){
-    $loans=Loan::where('borrowed', true)->where('is_overdue', false)->where('return_date', '<', date('Y-m-d'))->get();
-    if(count($loans)>=1){
-        foreach($loans as $loan){
-            $loan->forceFill([
-                'is_overdue'=>true,
+    $flights=Flight::where(['state', 'waiting']||['state', 'full'])->where('date', '=', date('Y-m-d'))->get();
+    if(count($flights)>=1){
+        foreach($flights as $flight){
+            $flight->forceFill([
+                'state'=>'travelling',
             ])->save();
         }
     }
-    $loans=Loan::where('borrowed', true)->where('is_overdue', true)->get();
-    if(count($loans)>=1){
-        foreach($loans as $loan){
-            $user=User::where('id', $loan->user_id)->first();
-            $book=Book::where('id', $loan->book_id)->first();
-            $user->notify(new LoanLateMail($user, $book));
+    $flights=Flight::where('state', 'travelling')->where('date', '>', date('Y-m-d'))->get();
+    if(count($flights)>=1){
+        foreach($flights as $flight){
+            $flight->forceFill([
+                'date' => fake()->dateTimeBetween($startDate='now', $endDate='+1 year'),
+                'state'=>'waiting',
+            ])->save();
         }
     }
 })->timezone('Europe/Madrid')->cron('0 12 * * *');

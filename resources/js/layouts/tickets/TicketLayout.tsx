@@ -36,12 +36,12 @@ export function TicketLayout({ title, children }: TicketLayoutProps) {
       href: "/dashboard",
     },
     {
-      title: "Tickets",
+      title: "Billetes",
       href: "/tickets",
     },
   ];
 
-  if (title !== "Tickets") {
+  if (title !== "Billetes") {
     breadcrumbs.push({
       title,
       href: "#",

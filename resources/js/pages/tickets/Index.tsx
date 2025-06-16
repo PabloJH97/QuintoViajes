@@ -17,11 +17,18 @@ import { ColumnDef, Row } from "@tanstack/react-table";
 import { TicketLayout } from "@/layouts/tickets/TicketLayout";
 import { Ticket, useDeleteTicket, useTickets } from "@/hooks/tickets/useTickets";
 import { isEmpty } from "lodash";
-
+interface PageProps {
+    auth: {
+        user: any;
+        permissions: string[];
+    };
+}
 
 export default function TicketsIndex() {
   const { t } = useTranslations();
   const { url } = usePage();
+  const page = usePage<{ props: PageProps }>();
+  const auth = page.props.auth;
 
 
   // Obtener los parámetros de la URL actual
@@ -37,6 +44,8 @@ export default function TicketsIndex() {
   const combinedSearch = [
     filters.user ? filters.user : 'null',
     filters.flight ? filters.flight : 'null',
+    filters.date ? filters.date : 'null',
+    filters.seats ? filters.seats : 'null',
     filters.created_at ? filters.created_at : 'null',
   ];
 
@@ -87,21 +96,49 @@ export default function TicketsIndex() {
       header: t("ui.tickets.columns.flight") || "Flight",
       accessorKey: "flight",
     }),
+    createTextColumn<Ticket>({
+      id: "seats",
+      header: t("ui.tickets.columns.seats.name") || "Seats",
+      format: (value) => {
+            let returnedValue=t(`ui.tickets.columns.seats.${value}`);
+            let aux;
+            let res: string[] = [];
+            if (value.includes(',')) {
+                aux = value.split(', ');
+                aux.map((seat) => {
+                    seat = t(`ui.tickets.columns.seats.${seat}`);
+                    res=[...res, seat];
+                });
+                aux = res.join(', ');
+                returnedValue=aux;
+            }
+            return returnedValue;
+        },
+      accessorKey: "seats",
+    }),
+    createDateColumn<Ticket>({
+      id: "date",
+      header: t("ui.tickets.columns.date") || "Date",
+      accessorKey: "date",
+    }),
     createDateColumn<Ticket>({
       id: "created_at",
       header: t("ui.tickets.columns.created_at") || "Created At",
       accessorKey: "created_at",
     }),
+
     createActionsColumn<Ticket>({
       id: "actions",
       header: t("ui.tickets.columns.actions") || "Actions",
       renderActions: (ticket) => (
         <>
+        {auth.permissions.includes('products.edit')&&
           <Link href={`/tickets/${ticket.id}/edit?page=${currentPage}&perPage=${perPage}`}>
             <Button variant="outline" size="icon" title={t("ui.tickets.buttons.edit") || "Edit ticket"}>
               <PencilIcon className="h-4 w-4" />
             </Button>
           </Link>
+        }
           <DeleteDialog
             id={ticket.id}
             onDelete={handleDeleteTicket}
@@ -115,7 +152,8 @@ export default function TicketsIndex() {
           />
         </>
       ),
-    }),
+    }
+    ),
   ] as ColumnDef<Ticket>[]), [t, handleDeleteTicket]);
 
   return (
@@ -124,12 +162,14 @@ export default function TicketsIndex() {
               <div className="space-y-6">
                   <div className="flex items-center justify-between">
                       <h1 className="text-3xl font-bold">{t('ui.tickets.title')}</h1>
+                      {auth.permissions.includes('products.create')&&
                       <Link href="/tickets/create">
                           <Button>
                               <PlusIcon className="mr-2 h-4 w-4" />
                               {t('ui.tickets.buttons.new')}
                           </Button>
                       </Link>
+                      }
                   </div>
                   <div></div>
 
@@ -148,6 +188,19 @@ export default function TicketsIndex() {
                                       label: t('ui.tickets.filters.flight') || 'Flight',
                                       type: 'text',
                                       placeholder: t('ui.tickets.placeholders.flight') || 'Flight...',
+                                  },
+                                  {
+                                      id: 'date',
+                                      label: t('ui.tickets.filters.date') || 'Date',
+                                      type: 'date',
+                                      placeholder: t('ui.tickets.placeholders.date') || 'Date...',
+                                  },
+                                  {
+                                      id: 'seats',
+                                      label: t('ui.flights.filters.seats.name') || 'Seats',
+                                      type: 'select',
+                                      options: [{value:'1st', label:t('ui.flights.filters.seats.1st')}, {value:'2nd', label: t('ui.flights.filters.seats.2nd')}, {value:'tourist', label: t('ui.flights.filters.seats.tourist')}],
+                                      placeholder: t('ui.flights.placeholders.seats.name') || 'Seats...',
                                   },
                                   {
                                       id: 'created_at',

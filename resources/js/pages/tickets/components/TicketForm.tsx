@@ -9,6 +9,7 @@ import { useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { Save, SquareMenu, X } from 'lucide-react';
 import { toast } from 'sonner';
+import { string } from 'zod';
 
 interface TicketFormProps {
     initialData?: {
@@ -23,6 +24,7 @@ interface TicketFormProps {
     user?: string;
     flight?: string;
     flightCode?: string | null;
+    seats?: string | null
 }
 
 interface PageProps {
@@ -43,11 +45,13 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
         </>
     );
 }
-export function TicketForm({ initialData, page, perPage, pageTitle, user, flight, flightCode }: TicketFormProps) {
+export function TicketForm({ initialData, page, perPage, pageTitle, user, flight, flightCode, seats }: TicketFormProps) {
     const { t } = useTranslations();
     const queryClient = useQueryClient();
     const pageAuth = usePage<{ props: PageProps }>();
     const auth = pageAuth.props.auth;
+
+
     // TanStack Form setup
     const form = useForm({
         defaultValues: {
@@ -195,9 +199,10 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                             <>
                                 <div className="flex flex-row items-center">
                                     <SquareMenu className="w-5"></SquareMenu>
-                                    <Label htmlFor={field.name}>{t('ui.flights.fields.seats.name')}</Label>
+                                    <Label htmlFor={field.name}>{t('ui.tickets.fields.seats.name')}</Label>
                                 </div>
                                 <div className="flex flex-row">
+                                    {seats?.includes('1st')&&
                                     <div className="flex flex-row p-2">
                                         <Input
                                             id={field.name}
@@ -205,15 +210,17 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                                             value={'1st'}
                                             type="radio"
                                             onBlur={field.handleBlur}
-                                            placeholder={t('ui.flights.placeholders.price')}
+                                            placeholder={t('ui.tickets.placeholders.seats.1st')}
                                             disabled={form.state.isSubmitting}
                                             onChange={(e)=>changeSeatsValue(e.target.value)}
                                             required={false}
                                             autoComplete="off"
                                             className="w-auto"
                                         />
-                                        <Label>{t('ui.flights.fields.seats.1st')}</Label>
+                                        <Label>{t('ui.tickets.fields.seats.1st')}</Label>
                                     </div>
+                                    }
+                                    {seats?.includes('2nd')&&
                                     <div className="flex flex-row p-2">
                                         <Input
                                             id={field.name}
@@ -221,15 +228,17 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                                             value={'2nd'}
                                             type="radio"
                                             onBlur={field.handleBlur}
-                                            placeholder={t('ui.flights.placeholders.price')}
+                                            placeholder={t('ui.tickets.placeholders.seats.2nd')}
                                             disabled={form.state.isSubmitting}
                                             onChange={(e)=>changeSeatsValue(e.target.value)}
                                             required={false}
                                             autoComplete="off"
                                             className="w-auto"
                                         />
-                                        <Label>{t('ui.flights.fields.seats.2nd')}</Label>
+                                        <Label>{t('ui.tickets.fields.seats.2nd')}</Label>
                                     </div>
+                                    }
+                                    {seats?.includes('tourist')&&
                                     <div className="flex flex-row p-2">
                                         <Input
                                             id={field.name}
@@ -237,15 +246,16 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                                             value={'tourist'}
                                             type="radio"
                                             onBlur={field.handleBlur}
-                                            placeholder={t('ui.flights.placeholders.price')}
+                                            placeholder={t('ui.tickets.placeholders.seats.tourist')}
                                             disabled={form.state.isSubmitting}
                                             onChange={(e)=>changeSeatsValue(e.target.value)}
                                             required={false}
                                             autoComplete="off"
                                             className="w-auto"
                                         />
-                                        <Label>{t('ui.flights.fields.seats.tourist')}</Label>
+                                        <Label>{t('ui.tickets.fields.seats.tourist')}</Label>
                                     </div>
+                                    }
                                 </div>
 
                                 <FieldInfo field={field} />
@@ -267,11 +277,7 @@ export function TicketForm({ initialData, page, perPage, pageTitle, user, flight
                             <SquareMenu color="#155dfc"></SquareMenu>
                             <h1 className="font-bold">{pageTitle}</h1>
                         </div>
-                        <div>
-                            <p className="font-sans text-sm font-bold text-gray-400">
-                                {'Ingresa la información para crear un nuevo piso en el sistema'}
-                            </p>
-                        </div>
+
                     </CardHeader>
 
                     <div>

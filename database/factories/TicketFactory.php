@@ -28,6 +28,7 @@ class TicketFactory extends Factory
         return [
             'user_id' => User::all()->random()->id,
             'flight_id' => Flight::all()->random()->id,
+            'seats' => fake()->randomElement($array=['1st', '2nd', 'tourist']),
 
         ];
     }

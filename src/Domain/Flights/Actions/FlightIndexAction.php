@@ -5,11 +5,17 @@ namespace Domain\Flights\Actions;
 use Domain\Flights\Data\Resources\FlightResource;
 use Domain\Flights\Models\Flight;
 use Domain\Planes\Models\Plane;
+use Illuminate\Support\Facades\Auth;
 
 class FlightIndexAction
 {
     public function __invoke(?array $search = null, int $perPage = 10)
     {
+        $user2=Auth::user();
+        $isUser=false;
+        if(!in_array('reports.view', $user2->getPermissionNames()->toArray())){
+            $isUser=true;
+        }
         $code=$search[0];
         $planeCode=$search[1];
         $origin=$search[2];
@@ -18,6 +24,9 @@ class FlightIndexAction
         $seats=$search[5];
         $date=$search[6];
         $state=$search[7];
+        if($isUser){
+            $state='waiting';
+        }
         $created_at=$search[8];
 
         if($date!='null'){

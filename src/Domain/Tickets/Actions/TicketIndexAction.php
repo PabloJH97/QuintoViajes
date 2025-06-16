@@ -12,15 +12,17 @@ class TicketIndexAction
 {
     public function __invoke(?array $search = null, int $perPage = 10)
     {
+        $user=$search[0];
         $user2=Auth::user();
         $isUser=false;
-        $user=$search[0];
         if(!in_array('reports.view', $user2->getPermissionNames()->toArray())){
             $user=Auth::user()->id;
             $isUser=true;
         }
         $flight=$search[1];
-        $created_at=$search[2];
+        $date=$search[2];
+        $seats=$search[3];
+        $created_at=$search[4];
 
         if($created_at!='null'){
             $created_at=explode('T', $created_at)[0];
@@ -48,6 +50,12 @@ class TicketIndexAction
             })
             ->when($flight!='null', function ($query) use ($flightArray){
                 $query->whereIn('flight_id', $flightArray);
+            })
+            ->when($seats!='null', function ($query) use ($seats){
+                $query->where('seats', 'ILIKE', "%".$seats."%");
+            })
+            ->when($date!='null', function ($query) use ($date){
+                $query->where('date', 'ILIKE', "%".$date."%");
             })
             ->when($created_at!='null', function ($query) use ($created_at){
                 $query->where('created_at', 'ILIKE', "%".$created_at."%");

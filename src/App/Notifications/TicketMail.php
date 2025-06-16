@@ -2,21 +2,23 @@
 
 namespace App\Notifications;
 
+use Domain\Tickets\Models\Ticket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class test extends Notification implements ShouldQueue
+class TicketMail extends Notification implements ShouldQueue
 {
     use Queueable;
+    public $ticket;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(Ticket $ticket)
     {
-        //
+        $this->ticket=$ticket;
     }
 
     /**
@@ -35,9 +37,10 @@ class test extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('Test')
-            ->action('Hola buena tarde esto es un test', url('/'))
-            ->line('Este correo se manda cuando se crea un billete');
+            ->greeting('Buenas')
+            ->line('Gracias por comprar un billete para el vuelo '.$this->ticket->flight->code)
+            ->line('Le recordamos que la fecha del vuelo es '.$this->ticket->flight->date)
+            ->action('Compruebe sus tickets', url('/tickets'));
     }
 
     /**

@@ -16,15 +16,15 @@ class UserSeeder extends Seeder
         // Create admin user if it doesn't exist
         if (!User::where('email', 'admin@example.com')->exists()) {
             $user=User::factory()->create([
-                'name' => 'Test User',
+                'name' => 'Test Admin',
                 'email' => 'admin@example.com',
             ]);
             $user->syncPermissions(Permission::all()->pluck('name')->toArray());
         }
-        if (!User::where('email', 'pablo@example.com')->exists()) {
+        if (!User::where('email', 'user@example.com')->exists()) {
             $user=User::factory()->create([
-                'name' => 'Pablo',
-                'email' => 'pablo@example.com',
+                'name' => 'Test user',
+                'email' => 'user@example.com',
             ]);
             $user->syncPermissions(['products.view', 'config.access', 'config.modify']);
         }
